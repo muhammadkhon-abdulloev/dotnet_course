@@ -5,18 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace h1.Controllers;
 
 [ApiController]
-[Route("/api")]
-public class ApiController: ControllerBase
+[Route("/api/users")]
+public class UserController: ControllerBase
 {
     private readonly IUserRepository _userRepository;
 
-    public ApiController(IUserRepository userRepository)
+    public UserController(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
-
+    
     [HttpGet]
-    [Route("/user")]
     public IResult GetUser()
     {
         var users = _userRepository.GetUsers();
@@ -24,7 +23,7 @@ public class ApiController: ControllerBase
     }
     
     [HttpGet]
-    [Route("/user/{id:int}")]
+    [Route("{id:int}")]
     public IResult GetUser(int id)
     {
         var user = _userRepository.GetUserById(id);
@@ -32,7 +31,6 @@ public class ApiController: ControllerBase
     }
     
     [HttpPost]
-    [Route("/user")]
     public IResult PostUser(User user)
     {
         var isCreated = _userRepository.CreateUser(user);
@@ -41,7 +39,6 @@ public class ApiController: ControllerBase
     }
     
     [HttpPut]
-    [Route("/user")]
     public IResult PutUser(User user)
     {
         var newUser = _userRepository.UpdateUser(user);
@@ -49,7 +46,7 @@ public class ApiController: ControllerBase
     }
     
     [HttpDelete]
-    [Route("/user/{id:int}")]
+    [Route("{id:int}")]
     public IResult DeleteUser(int id)
     {
         var user = _userRepository.DeleteUser(id);
