@@ -18,7 +18,7 @@ public class UserRepository: IUserRepository
         return _db.Users.ToList();
     }
 
-    public async Task<User?> GetUserById(int id)
+    public async Task<User?> GetUserById(Guid id)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
 
@@ -48,7 +48,7 @@ public class UserRepository: IUserRepository
         return userData;
     }
 
-    public async Task<User?> DeleteUser(int id)
+    public async Task<User?> DeleteUser(Guid id)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null)
