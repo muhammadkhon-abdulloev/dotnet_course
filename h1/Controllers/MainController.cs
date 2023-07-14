@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace h1.Controllers;
 
-[ApiController]
+[ApiExplorerSettings(IgnoreApi = true)]
 [Route("/")]
 public class MainController: ControllerBase
 {

@@ -17,15 +17,15 @@ public class ApiController: ControllerBase
 
     [HttpGet]
     [Route("/user")]
-    public IResult GetUsers()
+    public IResult GetUser()
     {
         var users = _userRepository.GetUsers();
         return Results.Json(users);
     }
     
     [HttpGet]
-    [Route("/user")]
-    public IResult GetUserById(int id)
+    [Route("/user/{id:int}")]
+    public IResult GetUser(int id)
     {
         var user = _userRepository.GetUserById(id);
         return user.Result == null ? Results.NotFound("User not found") : Results.Json(user);
@@ -49,11 +49,11 @@ public class ApiController: ControllerBase
     }
     
     [HttpDelete]
-    [Route("/user")]
+    [Route("/user/{id:int}")]
     public IResult DeleteUser(int id)
     {
         var user = _userRepository.DeleteUser(id);
-
+    
         return user.Result == null ? Results.BadRequest("Can not delete object"): Results.Ok(user);
     }
 }

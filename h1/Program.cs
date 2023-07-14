@@ -9,14 +9,15 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
-app.UseStaticFiles();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseStaticFiles();
 app.MapControllers();
 app.Run();
