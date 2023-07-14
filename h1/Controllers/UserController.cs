@@ -34,7 +34,7 @@ public class UserController: ControllerBase
     {
         var isCreated = _userRepository.CreateUser(user);
         
-        return isCreated.Result ? Results.NotFound("Error while creating user") : Results.Ok("ok");
+        return !isCreated.Result ? Results.NotFound("Error while creating user") : Results.Ok("ok");
     }
     
     [HttpPut]
