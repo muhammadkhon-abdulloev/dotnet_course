@@ -22,8 +22,7 @@ public class UserController: ControllerBase
         return Results.Json(users);
     }
     
-    [HttpGet]
-    [Route("{id:int}")]
+    [HttpGet("{id:int}")]
     public IResult GetUser(int id)
     {
         var user = _userRepository.GetUserById(id);
@@ -45,8 +44,7 @@ public class UserController: ControllerBase
         return newUser.Result == null ? Results.NotFound("User not found") : Results.Json(newUser);
     }
     
-    [HttpDelete]
-    [Route("{id:int}")]
+    [HttpDelete("{id:int}")]
     public IResult DeleteUser(int id)
     {
         var user = _userRepository.DeleteUser(id);
