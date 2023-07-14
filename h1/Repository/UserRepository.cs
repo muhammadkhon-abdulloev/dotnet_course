@@ -15,19 +15,19 @@ public class UserRepository: IUserRepository
 
     public ICollection<User> GetUsers()
     {
-        return _db.Users.ToList();
+        return _db.User.ToList();
     }
 
     public async Task<User?> GetUserById(Guid id)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Id == id);
 
         return user;
     }
 
     public async Task<bool> CreateUser(User user)
     {
-        await _db.Users.AddAsync(user);
+        await _db.User.AddAsync(user);
         await _db.SaveChangesAsync();
         
         return true;
@@ -35,7 +35,7 @@ public class UserRepository: IUserRepository
 
     public async Task<User?> UpdateUser(User userData)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userData.Id);
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Id == userData.Id);
         if (user == null)
         {
             return null;
@@ -50,13 +50,13 @@ public class UserRepository: IUserRepository
 
     public async Task<User?> DeleteUser(Guid id)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+        var user = await _db.User.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null)
         {
             return null;
         }
 
-        _db.Users.Remove(user);
+        _db.User.Remove(user);
         await _db.SaveChangesAsync();
 
         return user;
