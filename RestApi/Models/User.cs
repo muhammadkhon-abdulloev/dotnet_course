@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RestApi.Models;
 
-[Index("id", IsUnique = true, Name = "UserIdIndex")]
+[Index("Id", IsUnique = true, Name = "UserIdIndex")]
 public class User
 {
     [Column("id"), Key, Required]

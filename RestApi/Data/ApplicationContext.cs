@@ -3,14 +3,14 @@ using RestApi.Models;
 
 namespace RestApi.Data;
 
-public class DataContext: DbContext
+public sealed class ApplicationContext: DbContext
 {
     public DbSet<User> User { get; set; } = null!;
 
-    public DataContext(DbContextOptions<DataContext> options)
+    public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {
-         Database.EnsureCreated();
+        Database.EnsureCreated();
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

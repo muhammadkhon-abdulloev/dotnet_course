@@ -7,8 +7,8 @@ namespace RestApi.Repository;
 
 public class UserRepository: IUserRepository
 {
-    private readonly DataContext _db;
-    public UserRepository(DataContext db)
+    private readonly ApplicationContext _db;
+    public UserRepository(ApplicationContext db)
     {
         _db = db;
     }
