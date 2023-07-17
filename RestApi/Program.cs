@@ -1,6 +1,6 @@
-using h1.Data;
-using h1.Interfaces;
-using h1.Repository;
+using RestApi.Data;
+using RestApi.Interfaces;
+using RestApi.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,4 +21,3 @@ app.UseSwaggerUI();
 
 app.UseStaticFiles();
 app.MapControllers();
-app.Run();

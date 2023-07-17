@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace h1.Controllers;
+namespace RestApi.Controllers;
 
 [ApiExplorerSettings(IgnoreApi = true)]
 [Route("/")]
@@ -11,7 +12,7 @@ public class MainController: ControllerBase
     [HttpGet]
     public async Task IndexHandler()
     {
-        HttpContext.Response.ContentType = "text/html; charset=utf-8";
-        await HttpContext.Response.SendFileAsync("html/index.html");
+        Response.ContentType = "text/html; charset=utf-8";
+        await Response.SendFileAsync("wwwroot/index.html");
     }
 }

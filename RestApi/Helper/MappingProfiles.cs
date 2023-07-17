@@ -1,8 +1,8 @@
 using AutoMapper;
-using h1.Dto;
-using h1.Models;
+using RestApi.Dto;
+using RestApi.Models;
 
-namespace h1.Helper;
+namespace RestApi.Helper;
 
 public class MappingProfiles: Profile
 {
