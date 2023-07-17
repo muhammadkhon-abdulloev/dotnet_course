@@ -1,5 +1,3 @@
-using h1.Dto;
-
 namespace h1.Models;
 
 public class User

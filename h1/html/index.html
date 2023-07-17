@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <title>METANIT.COM</title>
     <style>
-        td {padding:5px;}
-        button{margin: 5px;}
+        td {
+            padding:5px;
+        }
+        button {
+            margin: 5px;
+        }
+        
     </style>
 </head>
 <body>
@@ -13,11 +18,11 @@
 <div>
     <input type="hidden" id="userId" />
     <p>
-        Имя:<br/>
+        <label for="userName">Имя:</label><br/>
         <input id="userName" />
     </p>
     <p>
-        Возраст:<br />
+        <label for="userAge">Возраст:</label><br />
         <input id="userAge" type="number" />
     </p>
     <p>
@@ -26,7 +31,13 @@
     </p>
 </div>
 <table>
-    <thead><tr><th>Имя</th><th>Возраст</th><th></th></tr></thead>
+    <thead>
+    <tr>
+        <th>Имя</th>
+        <th>Возраст</th>
+        <th></th>
+    </tr>
+    </thead>
     <tbody>
     </tbody>
 </table>
