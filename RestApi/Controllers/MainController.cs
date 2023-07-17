@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RestApi.Controllers;
 
+[Authorize]
 [ApiExplorerSettings(IgnoreApi = true)]
 [Route("/")]
 public class MainController: ControllerBase

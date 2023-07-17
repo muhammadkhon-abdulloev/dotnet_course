@@ -7,6 +7,7 @@ using RestApi.Models;
 
 namespace RestApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/users")]
 public class UserController: ControllerBase
