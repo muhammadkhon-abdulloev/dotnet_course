@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -41,6 +42,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(corsPolicyBuilder => corsPolicyBuilder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseAuthentication();
 app.UseAuthorization();
