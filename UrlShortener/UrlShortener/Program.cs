@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using UrlShortener.Data;
 using UrlShortener.Interfaces;
 using UrlShortener.Repository;
@@ -10,8 +12,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddScoped<IUrlRepository, UrlRepository>();
-builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IUrlService, UrlService>();
+builder.Services.AddMemoryCache();
+
+builder.Services.AddSingleton<ICacheRepository, MemoryCacheRepository>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

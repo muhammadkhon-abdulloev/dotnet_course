@@ -21,6 +21,14 @@ public class UrlRepository: IUrlRepository
         return result;
     }
 
+    public async Task<Url?> GetShortUrl(string longUrl)
+    {
+        var result = await _db.Urls.FirstOrDefaultAsync(u => u.LongUrl == longUrl);
+
+        return result;
+    }
+    
+
     public async Task<bool> InsertUrl(Url url)
     {
         var result = await _db.Urls.FirstOrDefaultAsync(u => u.ShortUrl == url.ShortUrl);

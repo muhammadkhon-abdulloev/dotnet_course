@@ -24,13 +24,17 @@ public class UrlService: IUrlService
 
     public string GetLongUrl(string shortUrl)
     {
-        var url = _repository.GetLongUrl(shortUrl).Result;
+        var url = _cacheRepository.GetLongUrl(shortUrl);
         if (url == null || url.ShortUrl != shortUrl)
         {
-            return "";
+            url = _repository.GetLongUrl(shortUrl).Result;
+            if (url == null || url.ShortUrl != shortUrl)
+            {
+                return "";
+            }
         }
-        
-        if (url.LongUrl!.StartsWith("http://") || url.LongUrl!.StartsWith("https://"))
+
+        if (url.LongUrl.StartsWith("http://") || url.LongUrl.StartsWith("https://"))
         {
             return url.LongUrl;
         }
@@ -41,10 +45,16 @@ public class UrlService: IUrlService
 
     public string ShortUrl(string longUrl)
     {
+        var url = _repository.GetShortUrl(longUrl).Result;
+        if (url != null)
+        {
+            return $"{_baseUrl}{url.ShortUrl}";
+        }
+        
         while (true)
         {
             var shortUrl = UrlShortenerHelper.GenerateNewShort(RandomNumberGenerator.GetInt32(0, 999999));
-            var url = new Url() { LongUrl = longUrl, ShortUrl = shortUrl };
+            url = new Url() { LongUrl = longUrl, ShortUrl = shortUrl };
 
             var ok = _repository.InsertUrl(url);
             if (!ok.Result)
