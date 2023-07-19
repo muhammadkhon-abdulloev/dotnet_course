@@ -32,6 +32,8 @@ public class UrlService: IUrlService
             {
                 return "";
             }
+            
+            _cacheRepository.InsertUrl(new Url{LongUrl = url.LongUrl, ShortUrl = shortUrl});
         }
 
         if (url.LongUrl.StartsWith("http://") || url.LongUrl.StartsWith("https://"))
