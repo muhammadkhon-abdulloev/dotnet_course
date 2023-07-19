@@ -1,10 +1,12 @@
-using h1.Dto;
+using System.ComponentModel.DataAnnotations;
 
-namespace h1.Models;
+namespace h1.Dto;
 
-public class User
+public class UserDto
 {
     public Guid Id { get; set; }
+
     public string? Name { get; set; }
+    
     public int Age { get; set; }
 }

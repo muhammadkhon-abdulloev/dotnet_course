@@ -1,3 +1,5 @@
+using AutoMapper;
+using h1.Dto;
 using h1.Interfaces;
 using h1.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -9,46 +11,65 @@ namespace h1.Controllers;
 public class UserController: ControllerBase
 {
     private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
 
-    public UserController(IUserRepository userRepository)
+    public UserController(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
+        _mapper = mapper;
     }
     
     [HttpGet]
+    [ProducesResponseType(200, Type = typeof(ICollection<UserDto>))]
+    [ProducesResponseType(204)]
     public IResult GetUser()
     {
         var users = _userRepository.GetUsers();
-        return Results.Json(users);
+        var usersDto = _mapper.Map<ICollection<UserDto>>(users);
+        
+        return usersDto.Count < 1 ? Results.NoContent() : Results.Ok(usersDto);
     }
     
-    [HttpGet("{id:int}")]
-    public IResult GetUser(int id)
+    [HttpGet("{id:Guid}")]
+    public IResult GetUser(Guid id)
     {
         var user = _userRepository.GetUserById(id);
-        return user.Result == null ? Results.NotFound("User not found") : Results.Json(user);
+        var userDto = _mapper.Map<UserDto>(user);
+        
+        return user.Result == null ? Results.NotFound("User not found") : Results.Json(userDto);
     }
     
     [HttpPost]
-    public IResult PostUser(User user)
+    [ProducesResponseType(200, Type = typeof(UserDto))]
+    [ProducesResponseType(404)]
+    public IResult PostUser(UserDto userDto)
     {
+        var user = _mapper.Map<User>(userDto);
         var isCreated = _userRepository.CreateUser(user);
         
-        return !isCreated.Result ? Results.NotFound("Error while creating user") : Results.Ok("ok");
+        return !isCreated.Result ? Results.BadRequest("Error while creating user") : Results.Created(HttpContext.Request.Path.ToString(), "");
     }
     
     [HttpPut]
-    public IResult PutUser(User user)
+    [ProducesResponseType(200, Type = typeof(UserDto))]
+    [ProducesResponseType(404)]
+    public IResult PutUser(UserDto userDto)
     {
+        var user = _mapper.Map<User>(userDto);
         var newUser = _userRepository.UpdateUser(user);
-        return newUser.Result == null ? Results.NotFound("User not found") : Results.Json(newUser);
+        
+        return newUser.Result == null ? Results.NotFound("User not found") : Results.Ok(newUser);
     }
     
-    [HttpDelete("{id:int}")]
-    public IResult DeleteUser(int id)
+    [HttpDelete("{id:Guid}")]
+    [ProducesResponseType(200, Type = typeof(UserDto))]
+    [ProducesResponseType(404)]
+    public IResult DeleteUser(Guid id)
     {
         var user = _userRepository.DeleteUser(id);
-    
-        return user.Result == null ? Results.BadRequest("Can not delete object"): Results.Ok(user);
+        var userDto = _mapper.Map<UserDto>(user);
+
+        
+        return user.Result == null ? Results.NotFound("User not found"): Results.Ok(userDto);
     }
 }
