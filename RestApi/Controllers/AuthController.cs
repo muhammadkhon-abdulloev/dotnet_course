@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using RestApi.Dto;
+using RestApi.Helper;
+using RestApi.Interfaces;
 
 namespace RestApi.Controllers;
 
@@ -12,29 +14,43 @@ namespace RestApi.Controllers;
 public class AuthController: ControllerBase
 {
     private readonly SymmetricSecurityKey _secretKey;
-    public AuthController(IConfiguration configuration)
+    private readonly IAdminRepository _adminRepository;
+    public AuthController(
+        IConfiguration configuration, 
+        IAdminRepository adminRepository
+        )
     {
         var secretKey = configuration.GetSection("SecretKey").Value;
         _secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+        _adminRepository = adminRepository;
     }
     
     [HttpPost]
     [Route("login")]
     [ProducesResponseType(200), ProducesResponseType(400)]
-    public IResult Login(UserDto userDto)
+    public IResult Login(AdminDto adminDto)
     {
         
-        if (userDto.Name == null)
+        if (adminDto.Username == "" || adminDto.Password == "")
         {
-            return Results.BadRequest("invalid username");
+            return Results.BadRequest("invalid username or password");
         }
 
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, userDto.Name) };
+        var admin = _adminRepository.GetAdminByUsername(adminDto.Username).Result;
+        if (admin == null)
+        {
+            return Results.BadRequest("invalid username or password");
+        }
+        
+        if (!PasswordHasher.CompareHashAndPassword(admin.PasswordHash, adminDto.Password))
+            return Results.BadRequest("invalid username or password");
+
+        var claims = new List<Claim> { new Claim(ClaimTypes.Name, adminDto.Username) };
         var jwt = new JwtSecurityToken(
             issuer: "ISSUER",
             audience: "AUDIENCE",
             claims: claims,
-            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),
+            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(10)),
             signingCredentials: new SigningCredentials(_secretKey, SecurityAlgorithms.HmacSha256));
             var token =  new JwtSecurityTokenHandler().WriteToken(jwt);
             
