@@ -6,6 +6,7 @@ using RestApi.Interfaces;
 using RestApi.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using JwtConstants = Microsoft.IdentityModel.JsonWebTokens.JwtConstants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,7 @@ builder.Services.AddSwaggerGen(option =>
         Description = "Please, enter a valid token",
         Name = "Authorization",
         Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
+        BearerFormat = JwtConstants.TokenType,
         Scheme = JwtBearerDefaults.AuthenticationScheme
     });
     option.AddSecurityRequirement(new OpenApiSecurityRequirement

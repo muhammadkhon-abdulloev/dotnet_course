@@ -3,9 +3,11 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using RestApi.Constants;
 using RestApi.Dto;
 using RestApi.Helper;
 using RestApi.Interfaces;
+using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace RestApi.Controllers;
 
@@ -27,25 +29,32 @@ public class AuthController: ControllerBase
     
     [HttpPost]
     [Route("login")]
-    [ProducesResponseType(200), ProducesResponseType(400)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DefaultResponseDto))] 
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(DefaultResponseDto))]
     public IResult Login(AdminDto adminDto)
     {
         
         if (adminDto.Username == "" || adminDto.Password == "")
         {
-            return Results.BadRequest("invalid username or password");
+            return Results.Json(
+                new DefaultResponseDto{Comment = Responses.InvalidUserNameOrPassword}, 
+                statusCode:StatusCodes.Status400BadRequest);
         }
 
         var admin = _adminRepository.GetAdminByUsername(adminDto.Username).Result;
         if (admin == null)
         {
-            return Results.BadRequest("invalid username or password");
+            return Results.Json(
+                new DefaultResponseDto {Comment = Responses.InvalidUserNameOrPassword}, 
+                statusCode:StatusCodes.Status400BadRequest);
         }
         
         if (!PasswordHasher.CompareHashAndPassword(admin.PasswordHash, adminDto.Password))
-            return Results.BadRequest("invalid username or password");
-
-        var claims = new List<Claim> { new Claim(ClaimTypes.Name, adminDto.Username) };
+            return Results.Json(
+                new DefaultResponseDto {Comment = Responses.InvalidUserNameOrPassword}, 
+                statusCode:StatusCodes.Status400BadRequest);
+        
+        var claims = new List<Claim> { new(ClaimTypes.Name, adminDto.Username) };
         var jwt = new JwtSecurityToken(
             issuer: "ISSUER",
             audience: "AUDIENCE",
@@ -54,6 +63,8 @@ public class AuthController: ControllerBase
             signingCredentials: new SigningCredentials(_secretKey, SecurityAlgorithms.HmacSha256));
             var token =  new JwtSecurityTokenHandler().WriteToken(jwt);
             
-        return Results.Ok(token);
+        return Results.Json(
+            new DefaultResponseDto{Ok = true, Data = token},
+            statusCode: StatusCodes.Status200OK);
     }
 }
