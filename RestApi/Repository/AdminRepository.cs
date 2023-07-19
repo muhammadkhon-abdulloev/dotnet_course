@@ -15,13 +15,13 @@ public class AdminRepository: IAdminRepository
 
     public async Task<Admin?> GetAdminById(int id)
     {
-        var admin = await _db.Admin.FirstOrDefaultAsync(a => a.Id == id);
+        var admin = await _db.Admins.FirstOrDefaultAsync(a => a.Id == id);
         return admin;
     }
 
     public async Task<Admin?> GetAdminByUsername(string username)
     {
-        var admin = await _db.Admin.FirstOrDefaultAsync(a => a.Username == username);
+        var admin = await _db.Admins.FirstOrDefaultAsync(a => a.Username == username);
         return admin;
     }
 }

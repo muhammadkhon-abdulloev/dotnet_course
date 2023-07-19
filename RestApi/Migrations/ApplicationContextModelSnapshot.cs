@@ -39,14 +39,15 @@ namespace RestApi.Migrations
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("name");
+                        .HasColumnName("username");
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Id" }, "UserIdIndex")
-                        .IsUnique();
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasDatabaseName("AdminIdIndex");
 
-                    b.ToTable("Admin");
+                    b.ToTable("admin");
 
                     b.HasData(
                         new
@@ -62,6 +63,7 @@ namespace RestApi.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
+                        .HasDefaultValue(new Guid("cb41ac92-7eb7-4466-adc8-f664aa523e97"))
                         .HasColumnName("id");
 
                     b.Property<int>("Age")
@@ -75,28 +77,28 @@ namespace RestApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Id" }, "UserIdIndex")
+                    b.HasIndex("Id")
                         .IsUnique()
-                        .HasDatabaseName("UserIdIndex1");
+                        .HasDatabaseName("UserIdIndex");
 
-                    b.ToTable("User");
+                    b.ToTable("user");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a5461b4d-c8e2-4940-9f5b-e1d1a8f63bd3"),
+                            Id = new Guid("4a0e5748-fde0-4886-91c4-ec36b6eb3a5b"),
                             Age = 37,
                             Name = "Tom"
                         },
                         new
                         {
-                            Id = new Guid("21259072-14ed-4d44-be7a-2c6cf62216ff"),
+                            Id = new Guid("6e3b1f1a-c8e8-403a-b368-c7b602d1a603"),
                             Age = 41,
                             Name = "Bob"
                         },
                         new
                         {
-                            Id = new Guid("d0cc9711-7463-4575-a65c-9fe0b4f3bacc"),
+                            Id = new Guid("f16011bb-f448-47f3-8c5a-1e6fc0a636fb"),
                             Age = 24,
                             Name = "Sam"
                         });
