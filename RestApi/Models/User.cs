@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace h1.Dto;
+namespace RestApi.Models;
 
-public class UserDto
+[Table("user")]
+public class User
 {
     public Guid Id { get; set; }
-
     public string? Name { get; set; }
-    
     public int Age { get; set; }
 }

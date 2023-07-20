@@ -1,14 +1,14 @@
-using h1.Data;
-using h1.Interfaces;
-using h1.Models;
 using Microsoft.EntityFrameworkCore;
+using RestApi.Data;
+using RestApi.Interfaces;
+using RestApi.Models;
 
-namespace h1.Repository;
+namespace RestApi.Repository;
 
 public class UserRepository: IUserRepository
 {
-    private readonly DataContext _db;
-    public UserRepository(DataContext db)
+    private readonly ApplicationContext _db;
+    public UserRepository(ApplicationContext db)
     {
         _db = db;
     }
