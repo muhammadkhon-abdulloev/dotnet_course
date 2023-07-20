@@ -20,6 +20,6 @@ public class MemoryCacheRepository: ICacheRepository
 
     public void InsertUrl(Url url)
     {
-        _cache.Set(url.ShortUrl!, url);
+        _cache.Set(url.ShortUrl, url);
     }
 }

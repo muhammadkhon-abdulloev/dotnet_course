@@ -1,21 +1,17 @@
+using Delivery.Data;
+using Delivery.Repository;
 using Microsoft.EntityFrameworkCore;
-using UrlShortener.Data;
-using UrlShortener.Interfaces;
-using UrlShortener.Repository;
-using UrlShortener.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString));
-builder.Services.AddScoped<IUrlRepository, UrlRepository>();
-builder.Services.AddScoped<IUrlService, UrlService>();
-builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
-builder.Services.AddSingleton<ICacheRepository, MemoryCacheRepository>();
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();

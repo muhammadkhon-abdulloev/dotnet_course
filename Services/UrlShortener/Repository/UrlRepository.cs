@@ -38,6 +38,8 @@ public class UrlRepository: IUrlRepository
         }
 
         await _db.Urls.AddAsync(url);
+        await _db.SaveChangesAsync();
+        
         return true;
     }
 }

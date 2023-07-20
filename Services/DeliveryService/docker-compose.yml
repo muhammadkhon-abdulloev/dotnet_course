@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  pgsql:
+    container_name: pgsql
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_DB=test_db
+      - POSTGRES_PASSWORD=test_pass
+    healthcheck:
+      test: pg_isready -U admin -d test_pass
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    volumes:
+      - /var/www/services/DeliveryService/storages/postgres:/var/lib/postgresql/data/
