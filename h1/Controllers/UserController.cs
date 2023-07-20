@@ -34,7 +34,7 @@ public class UserController: ControllerBase
     public IResult GetUser(Guid id)
     {
         var user = _userRepository.GetUserById(id);
-        var userDto = _mapper.Map<UserDto>(user);
+        var userDto = _mapper.Map<UserDto>(user.Result);
         
         return user.Result == null ? Results.NotFound("User not found") : Results.Json(userDto);
     }
@@ -58,7 +58,7 @@ public class UserController: ControllerBase
         var user = _mapper.Map<User>(userDto);
         var newUser = _userRepository.UpdateUser(user);
         
-        return newUser.Result == null ? Results.NotFound("User not found") : Results.Ok(newUser);
+        return newUser.Result == null ? Results.NotFound("User not found") : Results.Ok(newUser.Result);
     }
     
     [HttpDelete("{id:Guid}")]
@@ -67,9 +67,12 @@ public class UserController: ControllerBase
     public IResult DeleteUser(Guid id)
     {
         var user = _userRepository.DeleteUser(id);
-        var userDto = _mapper.Map<UserDto>(user);
-
+        if (user.Result == null)
+        {
+            return Results.NotFound("User not found");
+        }
         
-        return user.Result == null ? Results.NotFound("User not found"): Results.Ok(userDto);
+        var userDto = _mapper.Map<UserDto>(user.Result);
+        return Results.Ok(userDto);
     }
 }

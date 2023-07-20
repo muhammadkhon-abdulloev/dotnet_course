@@ -5,12 +5,12 @@ namespace h1.Data;
 
 public class DataContext: DbContext
 {
-    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<User> User { get; set; } = null!;
 
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)
     {
-         Database.EnsureCreatedAsync();
+         Database.EnsureCreated();
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  h1:
+    build:
+      dockerfile: Dockerfile
+    container_name: h1
+    networks:
+      - shared
+    ports:
+      - "80:80"
+ 
+  pgsql:
+    container_name: pgsql
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=test_user
+      - POSTGRES_DB=test_db
+      - POSTGRES_PASSWORD=test_pass
+    healthcheck:
+      test: pg_isready -U admin -d test_pass
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - shared
+    volumes:
+      - /var/www/services/h1/storages/postgres:/var/lib/postgresql/data/
+
+networks:
+  shared:
+    driver: bridge
+
+volumes:
+  pgsql:
+    driver: local
