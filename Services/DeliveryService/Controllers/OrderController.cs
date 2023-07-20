@@ -1,5 +1,6 @@
 using AutoMapper;
 using Delivery.Dto;
+using Delivery.Interfaces;
 using Delivery.Models;
 using Delivery.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ public class OrderController: ControllerBase
     }
 
     [HttpPost]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DefaultResponseDto))]
     public async Task<IResult> CreateOrder(OrderDto orderDto)
     {
@@ -38,20 +40,25 @@ public class OrderController: ControllerBase
     }
     
     [HttpGet]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDto>))]
-    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(DefaultResponseDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(DefaultResponseDto))]
     public async Task<IResult> GetOrders()
     {
         var orders = await _orderRepository.GetOrders();
 
         return orders.Count < 1
             ? Results.Json(
-                new DefaultResponseDto { Comment = "No orders yet ;(" },
-                statusCode: StatusCodes.Status204NoContent)
+                new DefaultResponseDto
+                {
+                    Comment = "No orders yet ;("
+                },
+                statusCode: StatusCodes.Status404NotFound)
             : Results.Json(orders, statusCode: StatusCodes.Status200OK);
     }
     
     [HttpGet("{orderId:int}")]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(DefaultResponseDto))]
     public async Task<IResult> GetOrders(int orderId)
@@ -60,7 +67,11 @@ public class OrderController: ControllerBase
 
         return order == null
             ? Results.Json(
-                new DefaultResponseDto { Comment = "Invalid orderId" },
+                new DefaultResponseDto
+                {
+                    Comment = "Invalid orderId", 
+                    OrderId = orderId
+                },
                 statusCode: StatusCodes.Status400BadRequest)
             : Results.Json(order, statusCode: StatusCodes.Status200OK);
     }

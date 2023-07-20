@@ -1,12 +1,11 @@
 using Delivery.Data;
+using Delivery.Interfaces;
 using Delivery.Repository;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<ApplicationContext>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 

@@ -6,13 +6,21 @@ namespace Delivery.Data;
 public sealed class ApplicationContext: DbContext
 {
     public DbSet<Order> Orders { get; set; } = null!;
-
-    public ApplicationContext(DbContextOptions<ApplicationContext> options)
+    private readonly string _connectionString;
+        
+    public ApplicationContext(IConfiguration configuration, DbContextOptions<ApplicationContext> options)
         : base(options)
     {
+        _connectionString = configuration.GetConnectionString("DefaultConnection")!;
         Database.EnsureCreated();
     }
-    
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql(_connectionString);
+        base.OnConfiguring(optionsBuilder);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Order>(etp =>
@@ -30,10 +38,10 @@ public sealed class ApplicationContext: DbContext
                 new Order
                 {
                     Id = 1,
-                    SenderCity = "Khujand",
-                    SenderAddress = "Raheem Jalil, 12",
-                    ReceiverCity = "Moscow",
-                    ReceiverAddress = "Malaya Ordynka, 9",
+                    SenderCity = "Moscow",
+                    SenderAddress = "Tashkent st., 33",
+                    ReceiverCity = "St. Petersburg",
+                    ReceiverAddress = "Moscow st., 11",
                     CargoWeight = 1.35,
                     PickupDate = DateOnly.FromDateTime(DateTime.Now.Add(TimeSpan.FromDays(3)))
                 });

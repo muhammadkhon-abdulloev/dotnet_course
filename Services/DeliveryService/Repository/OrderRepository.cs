@@ -1,4 +1,5 @@
 using Delivery.Data;
+using Delivery.Interfaces;
 using Delivery.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,9 @@ public class OrderRepository: IOrderRepository
     public async Task<int> CreateOrder(Order order)
     {
         await _db.Orders.AddAsync(order);
-        return await _db.SaveChangesAsync();;
+        await _db.SaveChangesAsync();
+        
+        return order.Id;
     }
 
     public async Task<List<Order>> GetOrders()
