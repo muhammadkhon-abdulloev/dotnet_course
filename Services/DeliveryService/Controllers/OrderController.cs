@@ -2,7 +2,6 @@ using AutoMapper;
 using Delivery.Dto;
 using Delivery.Interfaces;
 using Delivery.Models;
-using Delivery.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Delivery.Controllers;

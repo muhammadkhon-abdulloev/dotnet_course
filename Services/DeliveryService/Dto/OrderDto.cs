@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace Delivery.Dto;
 
 public class OrderDto

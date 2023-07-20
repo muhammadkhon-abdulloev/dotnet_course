@@ -2,7 +2,7 @@ using AutoMapper;
 using Delivery.Dto;
 using Delivery.Models;
 
-namespace RestApi.Helper;
+namespace Delivery.Helper;
 
 public class MappingProfiles: Profile
 {
