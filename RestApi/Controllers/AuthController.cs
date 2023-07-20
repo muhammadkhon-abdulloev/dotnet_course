@@ -7,7 +7,6 @@ using RestApi.Constants;
 using RestApi.Dto;
 using RestApi.Helper;
 using RestApi.Interfaces;
-using StatusCodes = Microsoft.AspNetCore.Http.StatusCodes;
 
 namespace RestApi.Controllers;
 
