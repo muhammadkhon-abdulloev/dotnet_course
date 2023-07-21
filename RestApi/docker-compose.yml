@@ -1,10 +1,10 @@
 version: "3.9"
 
 services:
-  h1:
+  RestApi:
     build:
       dockerfile: Dockerfile
-    container_name: h1
+    container_name: RestApi
     networks:
       - shared
     ports:
@@ -27,7 +27,7 @@ services:
     networks:
       - shared
     volumes:
-      - /var/www/services/h1/storages/postgres:/var/lib/postgresql/data/
+      - /var/www/services/RestApi/storages/postgres:/var/lib/postgresql/data/
 
 networks:
   shared:

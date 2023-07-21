@@ -12,7 +12,7 @@ using RestApi.Data;
 namespace RestApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230717103955_InitialCreate")]
+    [Migration("20230719095809_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -25,11 +25,48 @@ namespace RestApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("RestApi.Models.Admin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("username");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasDatabaseName("AdminIdIndex");
+
+                    b.ToTable("admin");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            PasswordHash = "FUOWnXgFu6p2dPfBLI6Pn8Z/+F5pneWR04mWQ6I+iX8=",
+                            Username = "test_admin"
+                        });
+                });
+
             modelBuilder.Entity("RestApi.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
+                        .HasDefaultValue(new Guid("cb41ac92-7eb7-4466-adc8-f664aa523e97"))
                         .HasColumnName("id");
 
                     b.Property<int>("Age")
@@ -43,27 +80,28 @@ namespace RestApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Id" }, "UserIdIndex")
-                        .IsUnique();
+                    b.HasIndex("Id")
+                        .IsUnique()
+                        .HasDatabaseName("UserIdIndex");
 
-                    b.ToTable("User");
+                    b.ToTable("user");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a1c60fad-a2e0-44c2-b3e8-4a91eae516d6"),
+                            Id = new Guid("4a0e5748-fde0-4886-91c4-ec36b6eb3a5b"),
                             Age = 37,
                             Name = "Tom"
                         },
                         new
                         {
-                            Id = new Guid("6d456a04-4e8c-434b-9610-329e882558e4"),
+                            Id = new Guid("6e3b1f1a-c8e8-403a-b368-c7b602d1a603"),
                             Age = 41,
                             Name = "Bob"
                         },
                         new
                         {
-                            Id = new Guid("d2fb0e85-4c76-4442-ad07-03069c72ad40"),
+                            Id = new Guid("f16011bb-f448-47f3-8c5a-1e6fc0a636fb"),
                             Age = 24,
                             Name = "Sam"
                         });

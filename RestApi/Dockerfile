@@ -4,11 +4,11 @@ WORKDIR .
 COPY ./*.csproj ./
 RUN dotnet restore
 
-COPY . ./h1/
-WORKDIR ./h1
+COPY . ./RestApi/
+WORKDIR ./RestApi
 RUN dotnet publish -c release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app ./
-ENTRYPOINT ["dotnet", "h1.dll"]
+ENTRYPOINT ["dotnet", "RestApi.dll"]
