@@ -1,10 +1,11 @@
 using AutoMapper;
-using h1.Dto;
-using h1.Interfaces;
-using h1.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestApi.Dto;
+using RestApi.Interfaces;
+using RestApi.Models;
 
-namespace h1.Controllers;
+namespace RestApi.Controllers;
 
 [ApiController]
 [Route("/api/users")]
@@ -47,7 +48,7 @@ public class UserController: ControllerBase
         var user = _mapper.Map<User>(userDto);
         var isCreated = _userRepository.CreateUser(user);
         
-        return !isCreated.Result ? Results.BadRequest("Error while creating user") : Results.Created(HttpContext.Request.Path.ToString(), "");
+        return !isCreated.Result ? Results.BadRequest("Error while creating user") : Results.Created(HttpContext.Request.Path.ToString(), user);
     }
     
     [HttpPut]

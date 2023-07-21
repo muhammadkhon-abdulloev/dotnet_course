@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace h1.Dto;
-
+namespace RestApi.Dto;
 public class UserDto
 {
     public Guid Id { get; set; }

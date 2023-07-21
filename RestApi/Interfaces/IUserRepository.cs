@@ -1,6 +1,6 @@
-using h1.Models;
+using RestApi.Models;
 
-namespace h1.Interfaces;
+namespace RestApi.Interfaces;
 
 public interface IUserRepository
 {
