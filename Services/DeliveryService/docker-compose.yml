@@ -1,15 +1,6 @@
 version: "3.9"
 
 services:
-  RestApi:
-    build:
-      dockerfile: Dockerfile
-    container_name: RestApi
-    networks:
-      - shared
-    ports:
-      - "80:80"
- 
   pgsql:
     container_name: pgsql
     image: postgres:latest
@@ -24,15 +15,5 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    networks:
-      - shared
     volumes:
-      - /var/www/services/RestApi/storages/postgres:/var/lib/postgresql/data/
-
-networks:
-  shared:
-    driver: bridge
-
-volumes:
-  pgsql:
-    driver: local
+      - /var/www/services/DeliveryService/storages/postgres:/var/lib/postgresql/data/

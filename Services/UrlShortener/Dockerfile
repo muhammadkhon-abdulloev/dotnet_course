@@ -4,11 +4,11 @@ WORKDIR .
 COPY ./*.csproj ./
 RUN dotnet restore
 
-COPY . ./RestApi/
-WORKDIR ./RestApi
+COPY . ./UrlShortener/
+WORKDIR ./UrlShortener
 RUN dotnet publish -c release -o /app
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app ./
-ENTRYPOINT ["dotnet", "RestApi.dll"]
+ENTRYPOINT ["dotnet", "UrlShortener.dll"]

@@ -1,12 +1,15 @@
 using AutoMapper;
+using AutoMapper.Execution;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RestApi.Constants;
 using RestApi.Dto;
 using RestApi.Interfaces;
 using RestApi.Models;
 
 namespace RestApi.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/users")]
 public class UserController: ControllerBase
@@ -21,59 +24,71 @@ public class UserController: ControllerBase
     }
     
     [HttpGet]
-    [ProducesResponseType(200, Type = typeof(ICollection<UserDto>))]
-    [ProducesResponseType(204)]
-    public IResult GetUser()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ICollection<UserDto>))]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(DefaultResponseDto))]
+    public IResult GetUsers()
     {
         var users = _userRepository.GetUsers();
         var usersDto = _mapper.Map<ICollection<UserDto>>(users);
         
-        return usersDto.Count < 1 ? Results.NoContent() : Results.Ok(usersDto);
+        return usersDto.Count < 1 ? Results.Json(
+            new DefaultResponseDto{Comment = Responses.NoContent}, 
+            statusCode: StatusCodes.Status204NoContent) : Results.Ok(usersDto);
     }
     
     [HttpGet("{id:Guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(DefaultResponseDto))]
     public IResult GetUser(Guid id)
     {
         var user = _userRepository.GetUserById(id);
         var userDto = _mapper.Map<UserDto>(user.Result);
         
-        return user.Result == null ? Results.NotFound("User not found") : Results.Json(userDto);
+        return user.Result == null ? Results.Json(
+            new DefaultResponseDto{Comment = Responses.UserNotFound}, 
+            statusCode: StatusCodes.Status404NotFound) : Results.Json(userDto);
     }
     
     [HttpPost]
-    [ProducesResponseType(200, Type = typeof(UserDto))]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(DefaultResponseDto))]
     public IResult PostUser(UserDto userDto)
     {
         var user = _mapper.Map<User>(userDto);
         var isCreated = _userRepository.CreateUser(user);
         
-        return !isCreated.Result ? Results.BadRequest("Error while creating user") : Results.Created(HttpContext.Request.Path.ToString(), user);
+        return !isCreated.Result ? Results.Json(
+            new DefaultResponseDto{Comment = Responses.BadRequest}, 
+            statusCode: StatusCodes.Status404NotFound) : Results.Created(HttpContext.Request.Path.ToString(), user);
     }
     
     [HttpPut]
-    [ProducesResponseType(200, Type = typeof(UserDto))]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(DefaultResponseDto))]
     public IResult PutUser(UserDto userDto)
     {
         var user = _mapper.Map<User>(userDto);
         var newUser = _userRepository.UpdateUser(user);
         
-        return newUser.Result == null ? Results.NotFound("User not found") : Results.Ok(newUser.Result);
+        return newUser.Result == null ? Results.Json(
+            new DefaultResponseDto{Comment = Responses.UserNotFound}, 
+            statusCode: StatusCodes.Status404NotFound) : Results.Ok(newUser.Result);
     }
     
     [HttpDelete("{id:Guid}")]
-    [ProducesResponseType(200, Type = typeof(UserDto))]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(DefaultResponseDto))]
     public IResult DeleteUser(Guid id)
     {
-        var user = _userRepository.DeleteUser(id);
-        if (user.Result == null)
+        var user = _userRepository.DeleteUser(id).Result;
+        if (user == null)
         {
-            return Results.NotFound("User not found");
+            return Results.Json(
+                new DefaultResponseDto{Comment = Responses.UserNotFound}, 
+                statusCode: StatusCodes.Status404NotFound);
         }
         
-        var userDto = _mapper.Map<UserDto>(user.Result);
+        var userDto = _mapper.Map<UserDto>(user);
         return Results.Ok(userDto);
     }
 }
