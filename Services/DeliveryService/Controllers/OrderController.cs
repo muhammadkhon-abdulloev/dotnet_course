@@ -12,13 +12,13 @@ namespace Delivery.Controllers;
 public class OrderController: ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly IOrderRepository _orderRepository;
+    private readonly IOrderService _orderService;
     public OrderController(
-        IOrderRepository orderRepository,
+        IOrderService orderService,
         IMapper mapper)
     {
         _mapper = mapper;
-        _orderRepository = orderRepository;
+        _orderService = orderService;
     }
 
     [HttpPost]
@@ -27,7 +27,7 @@ public class OrderController: ControllerBase
     public async Task<IResult> CreateOrder(OrderDto orderDto)
     {
         var order = _mapper.Map<Order>(orderDto);
-        var orderId = await _orderRepository.CreateOrder(order);
+        var orderId =  await _orderService.CreateOrder(order);
 
         var response = new DefaultResponseDto
         {
@@ -44,7 +44,7 @@ public class OrderController: ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(DefaultResponseDto))]
     public async Task<IResult> GetOrders()
     {
-        var orders = await _orderRepository.GetOrders();
+        var orders = await _orderService.GetOrders();
 
         return orders.Count < 1
             ? Results.Json(
@@ -62,7 +62,7 @@ public class OrderController: ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(DefaultResponseDto))]
     public async Task<IResult> GetOrders(int orderId)
     {
-        var order = await _orderRepository.GetOrderById(orderId);
+        var order = await _orderService.GetOrderById(orderId);
 
         return order == null
             ? Results.Json(
